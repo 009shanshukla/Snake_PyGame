@@ -8,6 +8,7 @@ pygame.init()
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
+green = (0, 155, 0)
 
 DisplayWidth = 800
 DisplayHeight = 600
@@ -32,8 +33,9 @@ def message_to_screen(msg, color):
 	GameDisplay.blit(ScreenText, [DisplayWidth/2, DisplayHeight/2])
 
 ### displaying snake on screen
-def snake(Game_x, Game_y, BlockSize):
-	pygame.draw.rect(GameDisplay, black, [Game_x, Game_y, BlockSize, BlockSize])		
+def snake(BlockSize, SnakeList):
+	for XnY in SnakeList:
+		pygame.draw.rect(GameDisplay, green, [XnY[0], XnY[1], BlockSize, BlockSize])		
 
 ### looping all events
 def GameLoop():
@@ -44,6 +46,10 @@ def GameLoop():
 	Game_y = DisplayHeight/2
 	Game_x_change = 0
 	Game_y_change = 0
+
+	### snake list will contain head list and rest body list 
+	SnakeList = []
+	SnakeLength = 1
 
 	### snake's co-ordinate will be always multiple of 10, so do apple's. hence rounding number to its lowest multiple of 10
 	RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize)/10.0)*10.0
@@ -101,7 +107,17 @@ def GameLoop():
 		### fitting apple's location 	
 		pygame.draw.rect(GameDisplay, red, [RandAppleX, RandAppleY, BlockSize, BlockSize])
 
-		snake(Game_x, Game_y, BlockSize)
+
+		
+		SnakeHead = []
+		SnakeHead.append(Game_x)
+		SnakeHead.append(Game_y)
+		SnakeList.append(SnakeHead)
+
+		if len(SnakeList) > SnakeLength:
+			del SnakeList[0]
+
+		snake(BlockSize, SnakeList)
 		
 		### will update the whole display screen
 		pygame.display.update()
