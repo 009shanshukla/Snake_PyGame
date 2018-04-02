@@ -50,10 +50,11 @@ def GameLoop():
 	### snake list will contain head list and rest body list 
 	SnakeList = []
 	SnakeLength = 1
+	AppleThickness = 30
 
 	### snake's co-ordinate will be always multiple of 10, so do apple's. hence rounding number to its lowest multiple of 10
-	RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize)/10.0)*10.0
-	RandAppleY = round(random.randrange(0, DisplayHeight- BlockSize)/10.0)*10.0
+	RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize))#/10.0)*10.0
+	RandAppleY = round(random.randrange(0, DisplayHeight- BlockSize))#/10.0)*10.0
 	
 	while not GameExit:
 
@@ -105,7 +106,7 @@ def GameLoop():
 		GameDisplay.fill(white)
 
 		### fitting apple's location 	
-		pygame.draw.rect(GameDisplay, red, [RandAppleX, RandAppleY, BlockSize, BlockSize])
+		pygame.draw.rect(GameDisplay, red, [RandAppleX, RandAppleY, AppleThickness, AppleThickness])
 
 
 		
@@ -114,18 +115,30 @@ def GameLoop():
 		SnakeHead.append(Game_y)
 		SnakeList.append(SnakeHead)
 
+
+		### Note - Last element of the list will be the head of Snake 
+
 		if len(SnakeList) > SnakeLength:
 			del SnakeList[0]
 
 		snake(BlockSize, SnakeList)
+
+		### if in case any snake segment in the last except last one(which will be head) is head then it means collision
+		for SnakeSegment in SnakeList[:-1]:
+			if SnakeSegment == SnakeHead:
+				GameOver = True
 		
 		### will update the whole display screen
 		pygame.display.update()
 
-		### apple's eaten condition
-		if Game_x == RandAppleX and Game_y == RandAppleY:
-			RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize)/10.0)*10.0
-			RandAppleY = round(random.randrange(0, DisplayHeight- BlockSize)/10.0)*10.0
+		### apple's eaten condition (Head is in between apple co-rdiantes (rectangle))
+		if Game_x >= RandAppleX and Game_x <= RandAppleX + AppleThickness:
+			if Game_y >= RandAppleY and Game_y <= RandAppleY + AppleThickness:
+				RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize))#/10.0)*10.0
+				RandAppleY = round(random.randrange(0, DisplayHeight- BlockSize))#/10.0)*10.0
+				SnakeLength += 1
+
+
 
 		### give freeze time frame per seconds
 		clock.tick(FPS)	
