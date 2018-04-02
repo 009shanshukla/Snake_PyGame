@@ -1,5 +1,4 @@
 import pygame
-import time
 
 ### will initialize the screen 
 pygame.init()
@@ -18,16 +17,7 @@ GameDisplay = pygame.display.set_mode((DisplayWidth, DisplayHeight))
 ### giving title to the scree
 pygame.display.set_caption('Slither')
 
-
-
-### Game variables
-GameExit = False
-Game_x = DisplayWidth/2
-Game_y = DisplayHeight/2
-Game_x_change = 0
-Game_y_change = 0
 BlockSize = 10
-
 ### clock object initialization
 clock = pygame.time.Clock()
 FPS = 30
@@ -41,57 +31,72 @@ def message_to_screen(msg, color):
 	GameDisplay.blit(ScreenText, [DisplayWidth/2, DisplayHeight/2])
 
 ### looping all events
-while not GameExit:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			GameExit = True
+def GameLoop():
+	### Game variables
+	GameExit = False
+	GameOver = False
+	Game_x = DisplayWidth/2
+	Game_y = DisplayHeight/2
+	Game_x_change = 0
+	Game_y_change = 0
+	
+	while not GameExit:
+		while GameOver == True:
+			GameDisplay.fill(white)
+			message_to_screen("You Loose, Press c to continue or q to quit", red)
+			pygame.display.update()
 
-		### if an arrow key is pressed		
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_LEFT:
-				Game_x_change = -BlockSize
-				Game_y_change = 0
-			elif event.key == pygame.K_RIGHT:
-				Game_x_change = BlockSize
-				Game_y_change = 0
-			elif event.key == pygame.K_UP:
-				Game_y_change = -BlockSize
-				Game_x_change = 0
-			elif event.key == pygame.K_DOWN:
-				Game_y_change = BlockSize
-				Game_x_change = 0
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					GameExit = True
+					GameOver = False
+				if event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_q:
+						GameExit = True
+						GameOver = False
+					if event.key == pygame.K_c:
+						GameLoop()		
+
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				GameExit = True
+
+			### if an arrow key is pressed		
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_LEFT:
+					Game_x_change = -BlockSize
+					Game_y_change = 0
+				elif event.key == pygame.K_RIGHT:
+					Game_x_change = BlockSize
+					Game_y_change = 0
+				elif event.key == pygame.K_UP:
+					Game_y_change = -BlockSize
+					Game_x_change = 0
+				elif event.key == pygame.K_DOWN:
+					Game_y_change = BlockSize
+					Game_x_change = 0
 
 		### off the boundary			
 		if Game_x >= DisplayWidth or Game_x < 0 or Game_y >= DisplayHeight or Game_y < 0:
-			GameExit = True			 
+			GameOver = True			 
 
-		### adding case if user lifts up from the key then movement stops 		
-		#if event.type == pygame.KEYUP:
-#			if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-#				Game_x_change = 0
+		### will change according to last arrow key pressed			
+		Game_x += Game_x_change 
+		Game_y += Game_y_change			
+		GameDisplay.fill(white)	
 
+		### parameter(ScreenObject, color, [x, y, w, h])
+		pygame.draw.rect(GameDisplay, black, [Game_x, Game_y, BlockSize, BlockSize])
 
-	### will change according to last arrow key pressed			
-	Game_x += Game_x_change 
-	Game_y += Game_y_change			
-	GameDisplay.fill(white)	
+		### will update the whole display screen
+		pygame.display.update()
 
-	### parameter(ScreenObject, color, [x, y, w, h])
-	pygame.draw.rect(GameDisplay, black, [Game_x, Game_y, BlockSize, BlockSize])
+		### give freeze time frame per seconds
+		clock.tick(FPS)	
 
-	### will update the whole display screen
-	pygame.display.update()
+	### quitting from pygame
+	pygame.quit()
 
-	### give freeze time frame per seconds
-	clock.tick(FPS)	
-
-### final msg on screen for 2 secs
-message_to_screen("You Lose", red)
-pygame.display.update()
-time.sleep(2)
-
-### quitting from pygame
-pygame.quit()
-
-### quitting from program
-quit()
+	### quitting from program
+	quit()
+GameLoop()	
