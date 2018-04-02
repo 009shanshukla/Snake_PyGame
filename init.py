@@ -19,7 +19,7 @@ GameDisplay = pygame.display.set_mode((DisplayWidth, DisplayHeight))
 ### giving title to the scree
 pygame.display.set_caption('Slither')
 
-BlockSize = 10
+BlockSize = 20
 ### clock object initialization
 clock = pygame.time.Clock()
 FPS = 30
@@ -27,10 +27,16 @@ FPS = 30
 ### font object initialization using system font
 font = pygame.font.SysFont(None, 25)
 
+
+def text_objects(text, color):
+	TextSurface = font.render(text, True, color)
+	return TextSurface, TextSurface.get_rect()
+
 ### message that needs to be printed on screen
 def message_to_screen(msg, color):
-	ScreenText = font.render(msg, True, color)
-	GameDisplay.blit(ScreenText, [DisplayWidth/2, DisplayHeight/2])
+	TextSurface, TextRect = text_objects(msg, color)
+	TextRect.center = (DisplayWidth/2), (DisplayHeight/2)
+	GameDisplay.blit(TextSurface, TextRect)
 
 ### displaying snake on screen
 def snake(BlockSize, SnakeList):
@@ -131,7 +137,7 @@ def GameLoop():
 		### will update the whole display screen
 		pygame.display.update()
 
-
+ 
 		if Game_x > RandAppleX and Game_x < RandAppleX + AppleThickness or Game_x + BlockSize > RandAppleX and Game_x + BlockSize < RandAppleX + AppleThickness:
 			if Game_y > RandAppleY and Game_y < RandAppleY + AppleThickness:
 				RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize))#/10.0)*10.0
