@@ -1,4 +1,5 @@
 import pygame
+import random
 
 ### will initialize the screen 
 pygame.init()
@@ -30,6 +31,10 @@ def message_to_screen(msg, color):
 	ScreenText = font.render(msg, True, color)
 	GameDisplay.blit(ScreenText, [DisplayWidth/2, DisplayHeight/2])
 
+### displaying snake on screen
+def snake(Game_x, Game_y, BlockSize):
+	pygame.draw.rect(GameDisplay, black, [Game_x, Game_y, BlockSize, BlockSize])		
+
 ### looping all events
 def GameLoop():
 	### Game variables
@@ -39,13 +44,20 @@ def GameLoop():
 	Game_y = DisplayHeight/2
 	Game_x_change = 0
 	Game_y_change = 0
+
+	### snake's co-ordinate will be always multiple of 10, so do apple's. hence rounding number to its lowest multiple of 10
+	RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize)/10.0)*10.0
+	RandAppleY = round(random.randrange(0, DisplayHeight- BlockSize)/10.0)*10.0
 	
 	while not GameExit:
+
+		### if game is over
 		while GameOver == True:
 			GameDisplay.fill(white)
 			message_to_screen("You Loose, Press c to continue or q to quit", red)
 			pygame.display.update()
 
+			### if c ,q our quit is pressed	
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					GameExit = True
@@ -57,6 +69,7 @@ def GameLoop():
 					if event.key == pygame.K_c:
 						GameLoop()		
 
+		### if one of arrow keys or quit is pressed				
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				GameExit = True
@@ -83,13 +96,20 @@ def GameLoop():
 		### will change according to last arrow key pressed			
 		Game_x += Game_x_change 
 		Game_y += Game_y_change			
-		GameDisplay.fill(white)	
+		GameDisplay.fill(white)
 
-		### parameter(ScreenObject, color, [x, y, w, h])
-		pygame.draw.rect(GameDisplay, black, [Game_x, Game_y, BlockSize, BlockSize])
+		### fitting apple's location 	
+		pygame.draw.rect(GameDisplay, red, [RandAppleX, RandAppleY, BlockSize, BlockSize])
 
+		snake(Game_x, Game_y, BlockSize)
+		
 		### will update the whole display screen
 		pygame.display.update()
+
+		### apple's eaten condition
+		if Game_x == RandAppleX and Game_y == RandAppleY:
+			RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize)/10.0)*10.0
+			RandAppleY = round(random.randrange(0, DisplayHeight- BlockSize)/10.0)*10.0
 
 		### give freeze time frame per seconds
 		clock.tick(FPS)	
