@@ -42,7 +42,7 @@ def GameLoop():
 	### Game variables
 	GameExit = False
 	GameOver = False
-	Game_x = DisplayWidth/2
+	Game_x = DisplayWidth/2      ## Top left of Snake body
 	Game_y = DisplayHeight/2
 	Game_x_change = 0
 	Game_y_change = 0
@@ -131,15 +131,17 @@ def GameLoop():
 		### will update the whole display screen
 		pygame.display.update()
 
-		### apple's eaten condition (Head is in between apple co-rdiantes (rectangle))
-		if Game_x >= RandAppleX and Game_x <= RandAppleX + AppleThickness:
-			if Game_y >= RandAppleY and Game_y <= RandAppleY + AppleThickness:
+
+		if Game_x > RandAppleX and Game_x < RandAppleX + AppleThickness or Game_x + BlockSize > RandAppleX and Game_x + BlockSize < RandAppleX + AppleThickness:
+			if Game_y > RandAppleY and Game_y < RandAppleY + AppleThickness:
 				RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize))#/10.0)*10.0
 				RandAppleY = round(random.randrange(0, DisplayHeight- BlockSize))#/10.0)*10.0
-				SnakeLength += 1
-
-
-
+				SnakeLength += 1	
+			elif Game_y + BlockSize > RandAppleY and Game_y + BlockSize < RandAppleY + AppleThickness:
+				RandAppleX = round(random.randrange(0, DisplayWidth - BlockSize))#/10.0)*10.0
+				RandAppleY = round(random.randrange(0, DisplayHeight- BlockSize))#/10.0)*10.0
+				SnakeLength += 1			    
+		
 		### give freeze time frame per seconds
 		clock.tick(FPS)	
 
