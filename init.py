@@ -13,44 +13,68 @@ green = (0, 155, 0)
 DisplayWidth = 800
 DisplayHeight = 600
 
+### will contain direction of head
+direction = "right"
+
 ### will give length and width to the screen
 GameDisplay = pygame.display.set_mode((DisplayWidth, DisplayHeight))
 
 ### giving title to the scree
 pygame.display.set_caption('Slither')
 
+### load image of sanke head
+img = pygame.image.load('snakeHead.jpg')
+
+### size of one unit of snake body 
 BlockSize = 20
+
 ### clock object initialization
 clock = pygame.time.Clock()
-FPS = 30
+FPS = 20    ## frame per second
 
 ### font object initialization using system font
 font = pygame.font.SysFont(None, 25)
 
-
+### function is used to get surface and inside rectangle of the whole text
 def text_objects(text, color):
 	TextSurface = font.render(text, True, color)
 	return TextSurface, TextSurface.get_rect()
 
 ### message that needs to be printed on screen
-def message_to_screen(msg, color):
+def message_to_screen(msg, color, y_displace = 0):
 	TextSurface, TextRect = text_objects(msg, color)
-	TextRect.center = (DisplayWidth/2), (DisplayHeight/2)
+	TextRect.center = (DisplayWidth/2), (DisplayHeight/2) + y_displace         ### y_dispalce is used to get y displacement from centre
 	GameDisplay.blit(TextSurface, TextRect)
 
 ### displaying snake on screen
 def snake(BlockSize, SnakeList):
-	for XnY in SnakeList:
+
+	### change the direction of head image as per movement
+	if direction == "right":
+		head = img
+	if direction == "left":
+		head = pygame.transform.rotate(img, 180)
+	if direction == "up":
+		head = pygame.transform.rotate(img, 90)
+	if direction == "down":
+		head = pygame.transform.rotate(img,270)			
+
+	### first print the head which is  the last tuple of list	
+	GameDisplay.blit(head, (SnakeList[-1][0], SnakeList[-1][1]))
+
+	### then the whole body
+	for XnY in SnakeList[:-1]:
 		pygame.draw.rect(GameDisplay, green, [XnY[0], XnY[1], BlockSize, BlockSize])		
 
 ### looping all events
 def GameLoop():
 	### Game variables
+	global direction            ### by making global we can change it
 	GameExit = False
 	GameOver = False
 	Game_x = DisplayWidth/2      ## Top left of Snake body
 	Game_y = DisplayHeight/2
-	Game_x_change = 0
+	Game_x_change = 10
 	Game_y_change = 0
 
 	### snake list will contain head list and rest body list 
@@ -67,7 +91,8 @@ def GameLoop():
 		### if game is over
 		while GameOver == True:
 			GameDisplay.fill(white)
-			message_to_screen("You Loose, Press c to continue or q to quit", red)
+			message_to_screen("You Loose", red, -50)   ### -50 is telling y-displacement from the centre of text
+			message_to_screen("Press c to continue or q to quit", black, 50)
 			pygame.display.update()
 
 			### if c ,q our quit is pressed	
@@ -90,15 +115,19 @@ def GameLoop():
 			### if an arrow key is pressed		
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LEFT:
+					direction = "left"
 					Game_x_change = -BlockSize
 					Game_y_change = 0
 				elif event.key == pygame.K_RIGHT:
+					direction = "right"
 					Game_x_change = BlockSize
 					Game_y_change = 0
 				elif event.key == pygame.K_UP:
+					direction = "up"
 					Game_y_change = -BlockSize
 					Game_x_change = 0
 				elif event.key == pygame.K_DOWN:
+					direction = "down"
 					Game_y_change = BlockSize
 					Game_x_change = 0
 
