@@ -1,7 +1,9 @@
 # Snake_PyGame
 
 ### About Game 
-- Snake_PyGame is a simple python game which is playable from windows screen. 
+- Snake_PyGame is a simple python game which is playable from windows/Ubuntu/mac screen.
+
+- Application for windows is available (.exe)
 
 ### Requirements
 
