@@ -40,9 +40,9 @@ clock = pygame.time.Clock()
 FPS = 20    ## frame per second
 
 ### font object initialization using system font
-SmallFont = pygame.font.SysFont("DejaVuSans", 25)
-MedFont = pygame.font.SysFont("DejaVuSans", 50)
-LargeFont = pygame.font.SysFont("DejaVuSans", 80)
+SmallFont = pygame.font.SysFont("comicsansms", 25)
+MedFont = pygame.font.SysFont("comicsansms", 50)
+LargeFont = pygame.font.SysFont("comicsansms", 80)
 
 
 ### opening screen of game
@@ -129,6 +129,8 @@ def score(score):
 ### pausing the screen
 def pause():
 	paused = True
+	message_to_screen("Paused", red, -100, "large")
+	message_to_screen("Press c to continue or q to quit", black, -20)
 
 	while paused:
 		for event in pygame.event.get():
@@ -143,9 +145,6 @@ def pause():
 				elif event.key == pygame.K_c:
 					paused = False
 
-		GameDisplay.fill(white)
-		message_to_screen("Paused", red, -100, "large")
-		message_to_screen("Press c to continue or q to quit", black, -20)
 		pygame.display.update()					
 
 
@@ -167,16 +166,15 @@ def GameLoop():
 
 	RandAppleX, RandAppleY = AppleLocGen()	
 	
-	while not GameExit:
-
-		### if game is over
-		while GameOver == True:
-			GameDisplay.fill(white)
-			message_to_screen("You Loose", red, -50, FontSize = "medium")   ### -50 is telling y-displacement from the centre of text
-			message_to_screen("Press c to continue or q to quit", black, 50, FontSize = "small")
+	while GameExit != True:
+		if GameOver == True:
+			message_to_screen("You Loose", red, -50,
+							  FontSize="medium")  ### -50 is telling y-displacement from the centre of text
+			message_to_screen("Press c to continue or q to quit", black, 50, FontSize="small")
 			pygame.display.update()
-
-			### if c ,q our quit is pressed	
+                
+		while GameOver == True:
+			### if c ,q our quit is pressed
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					GameExit = True
