@@ -23,6 +23,10 @@
 
 - can quit in between the game
 
+### Remember
+
+- setup.py is used to build microsoft windows application package by using cx_Freeze script. Hence path given to python3.6 can be different as per installation of individual system. So change path according to own system.(eg in my case : C:/users/Python36/  )  
+
 
 Pygame is the most used GUI library for Game Development. 
 
