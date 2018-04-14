@@ -1,9 +1,14 @@
 # Snake_PyGame
 
 ### About Game 
+
 - Snake_PyGame is a simple python game which is playable from windows/Ubuntu/mac screen.
 
 - Application for windows is available (.exe)
+
+- Snake has to eat apple and need to be saved from hitting boundaries or into itsef.
+
+- After eating each apples, its length will be increased in constant and so does score of the game. 
 
 ### Requirements
 
